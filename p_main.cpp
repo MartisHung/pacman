@@ -5,13 +5,13 @@
 #include "Map.h"
 
 enum class Direction { left, right, up, back };
-inline void PlayerMove(Direction PlayerMovement, int** RealMap, int &playerX, int &playerY);
+inline void PlayerMove(Direction PlayerMovement, short int** RealMap, short int &playerX, short int &playerY);
 inline Direction Keydown(char press);
 
-int main(int argc, char* argv[]) {
+int main(short int argc, char* argv[]) {
     /*declation & intilization*/
-    int** RealMap = new int*[8]; int playerX = 0, playerY = 1;
-    for (int i = 0; i < 8; i++) {RealMap[i] = new int[16];} map(RealMap);
+    short int** RealMap = new short int*[8]; short int playerX = 0, playerY = 1;
+    for (short int i = 0; i < 8; i++) {RealMap[i] = new short int[16];} map(RealMap);
     // 玩家初始位置
     RealMap[playerX][playerY] = 3;
     show(RealMap); system("pause");
@@ -35,12 +35,12 @@ int main(int argc, char* argv[]) {
         }
     }
     // 釋放動態記憶體
-    for (int i = 0; i < 8; i++) {delete[] RealMap[i];}delete[] RealMap;
+    for (short int i = 0; i < 8; i++) {delete[] RealMap[i];}delete[] RealMap;
     return 0;
 }
 
-inline void PlayerMove(Direction PlayerMovement, int** RealMap, int &playerX, int &playerY) {
-    int newX = playerX, newY = playerY;
+inline void PlayerMove(Direction PlayerMovement, short int** RealMap, short int &playerX, short int &playerY) {
+    short int newX = playerX, newY = playerY;
     switch (PlayerMovement) {
         case Direction::up:     if (playerX > 0 && RealMap[playerX - 1][playerY] != 2)  {newX = playerX - 1;}break;
         case Direction::back:   if (playerX < 7 && RealMap[playerX + 1][playerY] != 2)  {newX = playerX + 1;}break;
