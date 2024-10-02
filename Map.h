@@ -1,4 +1,4 @@
-
+#include <stdio.h>
 int** map(int** area) {
     area[0][0] = 2; area[0][1] = 2; area[0][2] = 2; area[0][3] = 2; area[0][4] = 2; area[0][5] = 2; area[0][6] = 2; area[0][7] = 2;
     area[0][8] = 2; area[0][9] = 2; area[0][10] = 2; area[0][11] = 2; area[0][12] = 2; area[0][13] = 2; area[0][14] = 2; area[0][15] = 2;
@@ -18,7 +18,6 @@ int** map(int** area) {
     area[7][8] = 2; area[7][9] = 2; area[7][10] = 2; area[7][11] = 2; area[7][12] = 2; area[7][13] = 2; area[7][14] = 2; area[7][15] = 2;
     return area;
 }
-
 inline void show(int** RealMap) {
     for (int i = 0; i < 8; i++) {
         for (int j = 0; j < 16; j++) {
