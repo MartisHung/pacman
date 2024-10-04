@@ -1,8 +1,10 @@
 #include <stdio.h>
-#include <conio.h> 
+#include <conio.h>
 #include <stdlib.h>
 #include <thread>
 #include <chrono>
+#define MapX 8
+#define MapY 16
 
 //intilization the map /初始化陣列
 short int** map(short int** area) {
@@ -24,17 +26,20 @@ short int** map(short int** area) {
     area[7][8]=2;area[7][9]=2;area[7][10]=2;area[7][11]=2;area[7][12]=2;area[7][13]=2;area[7][14]=2;area[7][15]=2;
     return area;
 }
-inline void show(short int** RealMap) {
+inline void show(short int** RealMap,bool &TF,short int *location) {
     for (int i = 0; i < 8; i++) {
         for (int j = 0; j < 16; j++) {
-            switch (RealMap[i][j]) {
-                case 0: printf(" "); break;
-                case 1: printf("."); break;
-                case 2: printf("#"); break;
-                case 3: printf("P"); break;
-                case 4: printf("N"); break;
+            if(location[2]!=i||location[3]!=j){
+                switch (RealMap[i][j]) {
+                    case 0: printf(" "); break;
+                    case 1: printf("."); break;
+                    case 2: printf("#"); break;
+                    case 3: printf("P"); break;
+                }
             }
+            else printf("N");
         }
         printf("\n");
     }
+    if(location[0]==location[2]&&location[1]==location[3]){TF=0;}
 }

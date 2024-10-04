@@ -1,54 +1,53 @@
 #include "Map.h"
-
 enum class Direction :short int{ left, right, up, back };
-inline void PlayerMove(Direction PlayerMovement, short int** RealMap, short int &playerX, short int &playerY);
+inline void PlayerMove(Direction PlayerMovement, short int** RealMap, short int *location);
 inline Direction Keydown(char press);
-inline void BotMove(short int **RealMap,short int &BotX,short int &BotY);
-
+inline void BotMove(short int **RealMap,short int *location);
 int main(void) {
     /*declation & intilization*/
-    short int** RealMap = new short int*[8]; 
-    short int playerX = 0, playerY = 1, BotX = 5 , BotY = 8 ;
-    for (short int i = 0; i < 8; i++) {RealMap[i] = new short int[16];} map(RealMap);
-    RealMap[playerX][playerY] = 3; RealMap[BotX][BotY] = 4 ;
-    show(RealMap); system("pause");
+    bool TF=1;short int** RealMap = new short int*[MapX];
+    /*playerX,playerY,botX,botY*/
+    short int  *location = new short int[4];
+    location[0]=0; location[1]=1; location[2]=5; location[3]=8;
+    for (short int i = 0; i < 8; i++) {RealMap[i] = new short int[MapY];} map(RealMap);
+    RealMap[location[0]][location[1]] = 3;show(RealMap,TF,location);
+    system("pause");
     // 遊戲迴圈 /game loop
-    while (1) {
+    while (TF) {
         if (_kbhit()) {
             char press=_getch();
-            if(press!='q'&&press!='Q'){
-                Direction PlayerKeydown;
-                PlayerKeydown=Keydown(press);
-                switch (PlayerKeydown) {
-                    case Direction::up:     PlayerMove(Direction::up, RealMap, playerX, playerY);   break;
-                    case Direction::back:   PlayerMove(Direction::back, RealMap, playerX, playerY); break;
-                    case Direction::left:   PlayerMove(Direction::left, RealMap, playerX, playerY); break;
-                    case Direction::right:  PlayerMove(Direction::right, RealMap, playerX, playerY);break;
-                }
-                BotMove(RealMap,BotX,BotY);
-                system("cls"); show(RealMap); printf("press q to leave ");  
-                std::this_thread::sleep_for(std::chrono::milliseconds(20));
+            Direction PlayerKeydown;
+            PlayerKeydown=Keydown(press);
+            switch (PlayerKeydown) {
+                case Direction::up:     PlayerMove(Direction::up, RealMap, location);   break;
+                case Direction::back:   PlayerMove(Direction::back, RealMap, location); break;
+                case Direction::left:   PlayerMove(Direction::left, RealMap, location); break;
+                case Direction::right:  PlayerMove(Direction::right, RealMap, location);break;
             }
-            else break;
+            BotMove(RealMap,location);
+            system("cls"); show(RealMap,TF,location);
+            std::this_thread::sleep_for(std::chrono::milliseconds(20));
         }
     }
+    system("cls");printf("You Lose!!!");system("pause");
     // 釋放動態記憶體 / releace dymantic memory
     for (short int i = 0; i < 8; i++) {delete[] RealMap[i];}delete[] RealMap;
+    delete[] location;
     return 0;
 }
 
-inline void PlayerMove(Direction PlayerMovement, short int** RealMap, short int &playerX, short int &playerY) {
-    short int newX = playerX, newY = playerY;
+inline void PlayerMove(Direction PlayerMovement, short int** RealMap, short int*location) {
+    short int newX = location[0], newY = location[1];
     switch (PlayerMovement) {
-        case Direction::up:     if (playerX > 0 && RealMap[playerX - 1][playerY] != 2)  {newX = playerX - 1;}break;
-        case Direction::back:   if (playerX < 7 && RealMap[playerX + 1][playerY] != 2)  {newX = playerX + 1;}break;
-        case Direction::left:   if (playerY > 0 && RealMap[playerX][playerY - 1] != 2)  {newY = playerY - 1;}break;
-        case Direction::right:  if (playerY < 15 && RealMap[playerX][playerY + 1] != 2) {newY = playerY + 1;}break;
+        case Direction::up:     if(location[0]>0&&RealMap[location[0]-1][location[1]]!=2)   {newX = location[0] - 1;}break;
+        case Direction::back:   if(location[0]<7&&RealMap[location[0]+1][location[1]]!=2)   {newX = location[0] + 1;}break;
+        case Direction::left:   if(location[1]>0&&RealMap[location[0]][location[1]-1]!=2)   {newY = location[1] - 1;}break;
+        case Direction::right:  if(location[1]<15&&RealMap[location[0]][location[1]+1]!=2)  {newY = location[1] + 1;}break;
     }
-    if (newX != playerX || newY != playerY) {
-        RealMap[playerX][playerY] = 0;   
-        RealMap[newX][newY] = 3;         
-        playerX = newX; playerY = newY;
+    if (newX != location[0] || newY != location[1]) {
+        RealMap[location[0]][location[1]] = 0;
+        RealMap[newX][newY] = 3;
+        location[0] = newX; location[1] = newY;
     }
 }
 //fetch the keyboard event / 抓取鍵盤活動
@@ -73,18 +72,17 @@ inline Direction Keydown(char press){
     }
     return PlayerKeydown;
 }
-inline void BotMove(short int**RealMap,short int &BotX,short int &BotY){
+//AI bot movement randomly / 隨機移動的人機
+inline void BotMove(short int** RealMap, short int *location) {
     srand(time(NULL));
-    short int movement;
-    bool TF=1;
-    do{
-        movement=rand()%4+1;
-        switch(movement){
-            case 1: if(RealMap[BotX-1][BotY]!=2&&BotX>=0)   { TF=0;RealMap[BotX][BotY]=0; BotX-=1; }    break;
-            case 2: if(RealMap[BotX+1][BotY]!=2&&BotX<=15)  { TF=0;RealMap[BotX][BotY]=0; BotX+=1; }    break;
-            case 3: if(RealMap[BotX][BotY-1]!=2&&BotY>=0)   { TF=0;RealMap[BotX][BotY]=0; BotY-=1; }    break;
-            case 4: if(RealMap[BotX][BotY+1]!=2&&BotY<=15)  { TF=0;RealMap[BotX][BotY]=0; BotY+=1; }    break;
+    short int movement; bool TF = 1;
+    do {
+        movement = rand() % 4 + 1;
+        switch (movement) {
+            case 1: if (location[2]>0 &&RealMap[location[2]-1][location[3]]!=2)     {TF=0;location[2]-=1;}break;
+            case 2: if (location[2]<MapX-1&&RealMap[location[2]+1][location[3]]!=2) {TF=0;location[2]+=1;}break;
+            case 3: if (location[3]>0 &&RealMap[location[2]][location[3]-1]!=2)     {TF=0;location[3]-=1;}break;
+            case 4: if (location[3]<MapY-1&&RealMap[location[2]][location[3]+1]!=2) {TF=0;location[3]+=1;}break;
         }
     } while (TF);
-    RealMap[BotX][BotY]=4;
 }
