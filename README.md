@@ -19,7 +19,7 @@ clang++ p_main.cpp -o PacMan.cpp
 ```bash
 g++ p_main.cpp -o PacMan.cpp
 ```
-## 執行檔案 / Execute Game
+### 執行檔案 / Execute Game
 ```bash
 ./PacMan.cpp
 ```
