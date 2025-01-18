@@ -10,7 +10,7 @@ Pac-Man is a classic arcade game where the player navigates Pac-Man through a ma
 ```bash
 git clone https://github.com/MartisHung/pacman.git
 ```
-##　編譯檔案 / Compile the file
+### 編譯檔案 / Compile the file
 - clang/clang++
 ```bash
 clang++ p_main.cpp -o PacMan.cpp
